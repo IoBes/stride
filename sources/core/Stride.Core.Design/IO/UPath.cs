@@ -620,9 +620,18 @@ namespace Stride.Core.IO
                 }
                 else
                 {
-                    // Else the character is invalid
-                    error = "Invalid character [{0}] found in path [{1}]".ToFormat(pathItem, pathToNormalize);
-                    return null;
+                    if (pathItem == '<' || pathItem == '>')
+                    {
+                        // Possibly UDIM -> replace with '_'
+                        builder.Append('_');
+                        paths[currentPath].Length++;
+                        state = NormalizationState.InComponent;
+                    }
+                    else { 
+                        // Else the character is invalid
+                        error = "Invalid character [{0}] found in path [{1}]".ToFormat(pathItem, pathToNormalize);
+                        return null;
+                    }
                 }
             }
 
